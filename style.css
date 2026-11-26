@@ -90,7 +90,8 @@ h1 {
   letter-spacing: -0.035em;
   font-weight: 700;
 }
-.lede { margin: 26px 0 0; max-width: 31em; font-size: clamp(16px, 1.5vw, 18px); color: var(--text-2); }
+.sub { margin: 18px 0 0; font-size: clamp(20px, 2.2vw, 26px); font-weight: 600; letter-spacing: -0.02em; color: var(--honey-ink); }
+.lede { margin: 14px 0 0; max-width: 31em; font-size: clamp(16px, 1.5vw, 18px); color: var(--text-2); }
 .cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 34px; align-items: center; }
 .btn {
   display: inline-flex; align-items: baseline; gap: 10px;

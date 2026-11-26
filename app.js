@@ -8,13 +8,14 @@ const LATEST_API = `https://api.github.com/repos/${REPO}/releases/latest`;
 
 /** 화면에 있는 한국어가 기본값이고, 여기에는 영어만 둡니다(한국어는 처음 HTML 에서 읽어 둠) */
 const EN = {
-  "doc.title": "Honij — Disk cleanup · File search",
+  "doc.title": "Honij — Keep your PC in order (file search · disk cleanup)",
   "nav.features": "Features",
   "nav.download": "Download",
   "nav.install": "Install help",
   "hero.eyebrow": "macOS · Windows · Free",
-  "hero.title": "A lighter disk.<br>Files, right away.",
-  "hero.lede": "Honij puts disk cleanup and file search in one app. It shows what is taking up space, lets you check before anything is deleted, and finds files from a few letters of their name.",
+  "hero.title": "Find it. Clear it.<br>Tell it apart.",
+  "hero.sub": "One app to keep your PC in order.",
+  "hero.lede": "Find files from a few letters of their name, see what is taking up space before you clear it, and tell File Explorer windows apart by a color for each folder.",
   "hero.download": "Download",
   "hero.other": "See other installers",
   "hero.hive": "cells for your disk. Each cell is 1/19 of the whole.",
