@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Honij — 디스크 정리 · 파일 찾기</title>
+<meta name="description" content="Honij 는 디스크 정리와 파일 찾기를 한곳에 모은 macOS · Windows 앱입니다. 모든 기능이 무료입니다.">
+<meta property="og:title" content="Honij — 디스크 정리 · 파일 찾기">
+<meta property="og:description" content="디스크 정리와 파일 찾기를 한곳에. macOS · Windows, 무료.">
+<meta property="og:image" content="assets/icon-256.png">
+<link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="top">
+  <a class="brand" href="./">
+    <img src="assets/icon.svg" width="28" height="28" alt="">
+    <span>Honij</span>
+  </a>
+  <nav class="top-nav" aria-label="Main">
+    <a href="#features" data-i18n="nav.features">기능</a>
+    <a href="#download" data-i18n="nav.download">다운로드</a>
+    <a href="#install" data-i18n="nav.install">설치 안내</a>
+  </nav>
+  <div class="lang" role="group" aria-label="Language">
+    <button type="button" data-lang="ko" aria-pressed="true">한국어</button>
+    <button type="button" data-lang="en" aria-pressed="false">English</button>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="hero-copy">
+      <p class="eyebrow" data-i18n="hero.eyebrow">macOS · Windows · 무료</p>
+      <h1 data-i18n="hero.title">디스크는 가볍게,<br>파일은 바로.</h1>
+      <p class="lede" data-i18n="hero.lede">Honij 는 디스크 정리와 파일 찾기를 한곳에 모은 앱입니다. 무엇이 공간을 차지하는지 보여 주고, 지우기 전에 확인시켜 주고, 이름 몇 글자로 파일을 찾아 줍니다.</p>
+      <div class="cta">
+        <a class="btn primary" id="main-download" href="#download">
+          <span data-i18n="hero.download">다운로드</span>
+          <small id="main-download-meta"></small>
+        </a>
+        <a class="btn ghost" href="#download" data-i18n="hero.other">다른 설치 파일 보기</a>
+      </div>
+      <p class="release-line" id="release-line" hidden></p>
+    </div>
+
+    <figure class="hive" aria-labelledby="hive-cap">
+      <svg id="hive" viewBox="-250 -235 500 470" role="img" aria-label=""></svg>
+      <figcaption id="hive-cap">
+        <span class="hive-num">19</span>
+        <span data-i18n="hero.hive">칸으로 보는 디스크. 한 칸이 전체의 1/19 입니다.</span>
+      </figcaption>
+    </figure>
+  </section>
+
+  <section class="features" id="features">
+    <h2 data-i18n="features.title">하는 일</h2>
+
+    <article class="feature wide">
+      <div class="feature-text">
+        <span class="no">01</span>
+        <h3 data-i18n="f1.title">파일 찾기</h3>
+        <p data-i18n="f1.body">드라이브를 미리 색인해 두고, 입력하는 대로 결과를 보여 줍니다. 어디서든 단축키로 빠른 검색 창을 띄울 수 있습니다.</p>
+        <p class="keys"><kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>Space</kbd> <span class="muted">macOS</span> <kbd>⌃</kbd><kbd>⇧</kbd><kbd>Space</kbd></p>
+      </div>
+      <div class="mock search" aria-hidden="true">
+        <div class="mock-input"><span class="glass"></span>report 2026<span class="caret"></span></div>
+        <ul>
+          <li><span><b>report</b>-<b>2026</b>-q3.xlsx</span><i>D:\Work\Finance</i></li>
+          <li><span>annual-<b>report</b>-<b>2026</b>.pdf</span><i>C:\Users\me\Documents</i></li>
+          <li><span><b>report</b>_<b>2026</b>_draft.docx</span><i>\\NAS\share\team</i></li>
+          <li><span><b>Report</b> <b>2026</b></span><i>D:\Archive</i></li>
+        </ul>
+      </div>
+    </article>
+
+    <article class="feature wide flip">
+      <div class="feature-text">
+        <span class="no">02</span>
+        <h3><span data-i18n="f2.title">탐색기 꾸미기</span> <span class="tag">Windows</span></h3>
+        <p data-i18n="f2.body">폴더마다 색과 이름표를 정해 두면, 그 폴더를 연 탐색기 창에 색 테두리가 둘러집니다. 창을 여러 개 띄워도 헷갈리지 않습니다.</p>
+      </div>
+      <div class="mock windows" aria-hidden="true">
+        <div class="win" style="--c:#1E6EF0"><span class="win-tag" data-i18n="f2.tagA">운영 서버</span><div class="win-bar"></div><div class="win-rows"><i></i><i></i><i></i></div></div>
+        <div class="win" style="--c:#E62828"><span class="win-tag" data-i18n="f2.tagB">백업</span><div class="win-bar"></div><div class="win-rows"><i></i><i></i><i></i><i></i></div></div>
+      </div>
+    </article>
+
+    <div class="feature-list">
+      <article>
+        <span class="no">03</span>
+        <h3 data-i18n="f3.title">디스크 분석</h3>
+        <p data-i18n="f3.body">어느 폴더가 공간을 차지하는지 크기순으로 펼쳐 봅니다.</p>
+      </article>
+      <article>
+        <span class="no">04</span>
+        <h3 data-i18n="f4.title">대용량 파일 · 정크 정리</h3>
+        <p data-i18n="f4.body">큰 파일과 캐시·임시 파일을 찾아 목록으로 보여 주고, 고른 것만 지웁니다.</p>
+      </article>
+      <article>
+        <span class="no">05</span>
+        <h3 data-i18n="f5.title">앱 삭제</h3>
+        <p data-i18n="f5.body">앱을 지울 때 함께 남는 설정·캐시 파일까지 찾아 줍니다.</p>
+      </article>
+      <article>
+        <span class="no">06</span>
+        <h3 data-i18n="f6.title">파일 · 폴더 메모</h3>
+        <p data-i18n="f6.body">파일이나 폴더에 메모를 달아 두고, 나중에 메모 내용으로 다시 찾습니다.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="download" id="download">
+    <div class="download-head">
+      <h2 data-i18n="dl.title">다운로드</h2>
+      <p class="muted" id="dl-version" data-i18n="dl.loading">최신 버전을 확인하는 중…</p>
+    </div>
+    <ul class="files" id="files">
+      <li data-kind="win">
+        <div><strong data-i18n="dl.win">Windows 설치 파일</strong><span class="pick" data-i18n="dl.recommended">권장</span>
+          <p data-i18n="dl.winNote">Windows 10 · 11 (64비트). 대부분은 이 파일이면 됩니다.</p></div>
+        <a class="btn small" data-i18n="dl.get" href="#">받기</a>
+      </li>
+      <li data-kind="offline">
+        <div><strong data-i18n="dl.offline">Windows 오프라인 설치 파일</strong>
+          <p data-i18n="dl.offlineNote">인터넷이 안 되는 PC 용. WebView2 를 포함해 용량이 큽니다.</p></div>
+        <a class="btn small" data-i18n="dl.get" href="#">받기</a>
+      </li>
+      <li data-kind="msi">
+        <div><strong data-i18n="dl.msi">Windows MSI</strong>
+          <p data-i18n="dl.msiNote">회사에서 일괄 배포할 때 쓰는 형식입니다.</p></div>
+        <a class="btn small" data-i18n="dl.get" href="#">받기</a>
+      </li>
+      <li data-kind="mac">
+        <div><strong data-i18n="dl.mac">macOS</strong>
+          <p data-i18n="dl.macNote">macOS 11 이상. Apple Silicon 과 Intel 을 모두 지원합니다.</p></div>
+        <a class="btn small" data-i18n="dl.get" href="#">받기</a>
+      </li>
+    </ul>
+    <p class="muted small"><a id="all-releases" href="#" data-i18n="dl.all">이전 버전과 변경 내용 보기</a></p>
+  </section>
+
+  <section class="install" id="install">
+    <h2 data-i18n="in.title">설치할 때 경고가 뜨면</h2>
+    <p class="lede-s" data-i18n="in.lede">Honij 는 아직 코드 서명을 하지 않아서, 처음 실행할 때 운영 체제가 한 번 막습니다. 아래 순서로 넘어갈 수 있습니다.</p>
+    <div class="steps">
+      <div>
+        <h3>Windows</h3>
+        <ol>
+          <li data-i18n="in.w1">"Windows의 PC 보호" 창에서 <b>추가 정보</b>를 누릅니다.</li>
+          <li data-i18n="in.w2"><b>실행</b>을 누릅니다.</li>
+          <li data-i18n="in.w3">설치 창이 늦게 뜨면 백신이 새 파일을 검사하는 중입니다. 잠시 기다려 주세요.</li>
+        </ol>
+      </div>
+      <div>
+        <h3>macOS</h3>
+        <ol>
+          <li data-i18n="in.m1"><code>.dmg</code> 를 열어 Honij 를 응용 프로그램 폴더로 옮깁니다.</li>
+          <li data-i18n="in.m2">실행이 막히면 시스템 설정 → 개인정보 보호 및 보안으로 갑니다.</li>
+          <li data-i18n="in.m3">아래쪽의 <b>그래도 열기</b>를 누릅니다.</li>
+        </ol>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <span>© 2026 박진오</span>
+  <a id="issues" href="#" data-i18n="foot.issues">문의 · 버그 신고</a>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>
