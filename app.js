@@ -8,7 +8,7 @@ const LATEST_API = `https://api.github.com/repos/${REPO}/releases/latest`;
 
 /** 화면에 있는 한국어가 기본값이고, 여기에는 영어만 둡니다(한국어는 처음 HTML 에서 읽어 둠) */
 const EN = {
-  "doc.title": "Honij — Keep your PC in order (file search · disk cleanup)",
+  "doc.title": "Honij — Keep your PC in order (file search · disk cleanup · Explorer decoration)",
   "nav.features": "Features",
   "nav.download": "Download",
   "nav.install": "Install help",
