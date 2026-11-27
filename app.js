@@ -57,6 +57,7 @@ const EN = {
   "dl.get": "Get",
   "dl.all": "Earlier versions and release notes",
   "dl.version": "Version {v} · {d}",
+  "dl.count": "{n} downloads",
   "dl.failed": "Couldn't check the latest version. The buttons open the release page.",
   "hi.title": "Release history",
   "hi.loading": "Loading…",
@@ -84,6 +85,7 @@ const EN = {
 const KO = {
   "doc.title": document.title,
   "dl.version": "버전 {v} · {d}",
+  "dl.count": "누적 {n}회 다운로드",
   "dl.failed": "최신 버전을 확인하지 못했습니다. 버튼을 누르면 릴리스 페이지로 갑니다.",
   "dl.for.win": "Windows 용",
   "dl.for.mac": "macOS 용",
@@ -153,12 +155,14 @@ function formatSize(bytes) {
 
 function toRelease(data) {
   const assets = {};
+  let downloads = 0; // 설치 파일을 받아 간 횟수 (설치 파일이 아닌 첨부는 세지 않음)
   for (const a of data.assets ?? []) {
     const kind = kindOf(String(a.name));
+    if (kind) downloads += Number(a.download_count) || 0;
     const url = String(a.browser_download_url ?? "");
     if (kind && !assets[kind] && url.startsWith(`https://github.com/${REPO}/`)) assets[kind] = { url, size: Number(a.size) || 0 };
   }
-  return { version: String(data.tag_name ?? "").replace(/^v/, ""), date: data.published_at, notes: String(data.body ?? ""), assets };
+  return { version: String(data.tag_name ?? "").replace(/^v/, ""), date: data.published_at, notes: String(data.body ?? ""), assets, downloads };
 }
 
 async function loadRelease() {
@@ -323,7 +327,10 @@ function renderRelease() {
 
   if (release) {
     const text = t("dl.version").replace("{v}", release.version).replace("{d}", formatDate(release.date));
-    versionLine.textContent = text;
+    // 모든 버전을 합친 횟수. 아직 0 이면 적지 않음
+    const total = releases.reduce((sum, r) => sum + r.downloads, 0);
+    const count = total > 0 ? ` · ${t("dl.count").replace("{n}", total.toLocaleString(lang === "en" ? "en-US" : "ko-KR"))}` : "";
+    versionLine.textContent = text + count;
     heroLine.textContent = text;
     heroLine.hidden = false;
   } else if (releaseFailed) {
