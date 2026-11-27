@@ -168,6 +168,28 @@ kbd { padding: 3px 8px; border: 1px solid var(--border); border-bottom-width: 2p
 .win-rows i:nth-child(3) { width: 86%; }
 .win-rows i:nth-child(4) { width: 54%; }
 
+/* 탐색기 색인: 화면 오른쪽 가장자리에 붙은 세로 꼬리표 */
+.mock.edge { background: var(--surface-2); position: relative; min-height: 350px; overflow: hidden; box-shadow: none; }
+.edge-win { position: absolute; left: 8%; top: 16%; width: 58%; background: var(--surface); border: 1px solid var(--border); border-radius: 9px; box-shadow: 0 14px 30px -18px rgba(0,0,0,.4); }
+.edge-tabs { position: absolute; right: 0; top: 9%; display: grid; gap: 4px; justify-items: end; }
+.edge-tabs span {
+  --c: var(--honey-pale); --ink: #281e0a;
+  writing-mode: vertical-rl; text-orientation: upright;
+  width: 26px; padding: 12px 0; box-sizing: border-box;
+  display: grid; place-items: center;
+  background: var(--c); color: var(--ink);
+  font-size: 12px; font-weight: 700; letter-spacing: 1px; line-height: 1;
+  border-radius: 9px 0 0 9px; box-shadow: -1px 2px 0 rgba(0,0,0,.12);
+  position: relative;
+}
+.edge-tabs b { font-weight: inherit; }
+.edge-tabs span.on { width: 33px; padding-right: 7px; }
+.edge-tabs em {
+  position: absolute; right: calc(100% + 8px); top: 6px;
+  writing-mode: horizontal-tb; font-style: normal; font-weight: 400; letter-spacing: 0;
+  background: #1a1a19; color: #f0f0ec; font-size: 13px; line-height: 1.4; padding: 6px 13px; border-radius: 8px; white-space: nowrap;
+}
+
 .feature-list { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-top: 1px solid var(--border); }
 .feature-list article { padding: 28px 24px 8px 0; }
 .feature-list article + article { padding-left: 24px; border-left: 1px solid var(--border); }
