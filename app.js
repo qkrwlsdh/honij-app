@@ -4,7 +4,9 @@
 /** 설치 파일이 올라가는 공개 저장소 */
 const REPO = "qkrwlsdh/honij-app";
 const RELEASES_URL = `https://github.com/${REPO}/releases`;
-const LATEST_API = `https://api.github.com/repos/${REPO}/releases/latest`;
+const LIST_API = `https://api.github.com/repos/${REPO}/releases?per_page=30`;
+/** 업데이트 이력에서 처음부터 펼쳐 보여 주는 버전 수 */
+const HISTORY_SHOWN = 5;
 
 /** 화면에 있는 한국어가 기본값이고, 여기에는 영어만 둡니다(한국어는 처음 HTML 에서 읽어 둠) */
 const EN = {
@@ -12,6 +14,7 @@ const EN = {
   "nav.features": "Features",
   "nav.download": "Download",
   "nav.install": "Install help",
+  "nav.history": "Release history",
   "hero.eyebrow": "macOS · Windows · Free",
   "hero.title": "Find it. Clear it.<br>Tell it apart.",
   "hero.sub": "One app to keep your PC in order.",
@@ -49,6 +52,17 @@ const EN = {
   "dl.all": "Earlier versions and release notes",
   "dl.version": "Version {v} · {d}",
   "dl.failed": "Couldn't check the latest version. The buttons open the release page.",
+  "hi.title": "Release history",
+  "hi.loading": "Loading…",
+  "hi.older": "Show earlier versions",
+  "hi.latest": "Latest",
+  "hi.empty": "No version has been published yet.",
+  "hi.failed": "Couldn't load the release history.",
+  "hi.noNotes": "No notes were written for this version.",
+  "hi.f.win": "Windows",
+  "hi.f.offline": "Windows offline",
+  "hi.f.msi": "MSI",
+  "hi.f.mac": "macOS",
   "dl.for.win": "for Windows",
   "dl.for.mac": "for macOS",
   "in.title": "If a warning appears during install",
@@ -67,11 +81,20 @@ const KO = {
   "dl.failed": "최신 버전을 확인하지 못했습니다. 버튼을 누르면 릴리스 페이지로 갑니다.",
   "dl.for.win": "Windows 용",
   "dl.for.mac": "macOS 용",
+  "hi.latest": "최신",
+  "hi.empty": "아직 공개된 버전이 없습니다.",
+  "hi.failed": "업데이트 이력을 불러오지 못했습니다.",
+  "hi.noNotes": "변경 내용이 적혀 있지 않습니다.",
+  "hi.f.win": "Windows",
+  "hi.f.offline": "Windows 오프라인",
+  "hi.f.msi": "MSI",
+  "hi.f.mac": "macOS",
 };
 for (const el of document.querySelectorAll("[data-i18n]")) KO[el.dataset.i18n] = el.innerHTML;
 
 let lang = "ko";
-let release = null; // { version, date, assets: { win, offline, msi, mac } }
+let releases = []; // 공개된 버전 전부(새 것부터): { version, date, notes, assets: { win, offline, msi, mac } }
+let release = null; // 그중 최신
 let releaseFailed = false;
 
 const t = (key) => (lang === "en" ? EN[key] : KO[key]) ?? KO[key] ?? key;
@@ -121,22 +144,151 @@ function formatSize(bytes) {
   return mb >= 100 ? `${Math.round(mb)} MB` : `${mb.toFixed(1)} MB`;
 }
 
+function toRelease(data) {
+  const assets = {};
+  for (const a of data.assets ?? []) {
+    const kind = kindOf(String(a.name));
+    const url = String(a.browser_download_url ?? "");
+    if (kind && !assets[kind] && url.startsWith(`https://github.com/${REPO}/`)) assets[kind] = { url, size: Number(a.size) || 0 };
+  }
+  return { version: String(data.tag_name ?? "").replace(/^v/, ""), date: data.published_at, notes: String(data.body ?? ""), assets };
+}
+
 async function loadRelease() {
   try {
-    const res = await fetch(LATEST_API, { headers: { Accept: "application/vnd.github+json" } });
+    const res = await fetch(LIST_API, { headers: { Accept: "application/vnd.github+json" } });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const data = await res.json();
-    const assets = {};
-    for (const a of data.assets ?? []) {
-      const kind = kindOf(String(a.name));
-      const url = String(a.browser_download_url ?? "");
-      if (kind && !assets[kind] && url.startsWith(`https://github.com/${REPO}/`)) assets[kind] = { url, size: Number(a.size) || 0 };
-    }
-    release = { version: String(data.tag_name ?? "").replace(/^v/, ""), date: data.published_at, assets };
+    const list = await res.json();
+    if (!Array.isArray(list)) throw new Error("unexpected response");
+    releases = list.filter((r) => !r.draft && !r.prerelease).map(toRelease);
+    release = releases[0] ?? null;
   } catch {
     releaseFailed = true;
   }
+  document.getElementById("history-status").dataset.loaded = "1";
   renderRelease();
+}
+
+const formatDate = (iso) => (iso ? new Date(iso).toLocaleDateString(lang === "en" ? "en-US" : "ko-KR", { year: "numeric", month: "long", day: "numeric" }) : "");
+
+/** 한 줄 안의 **굵게**, `코드`, [글](https://…) 만 꾸밉니다. 나머지는 글자 그대로 넣습니다. */
+function appendInline(parent, text) {
+  const re = /\*\*(.+?)\*\*|`([^`]+)`|\[([^\]]+)\]\((https:\/\/[^\s)]+)\)/g;
+  let last = 0;
+  for (const m of text.matchAll(re)) {
+    parent.append(text.slice(last, m.index));
+    let el;
+    if (m[1] !== undefined) { el = document.createElement("b"); el.textContent = m[1]; }
+    else if (m[2] !== undefined) { el = document.createElement("code"); el.textContent = m[2]; }
+    else { el = document.createElement("a"); el.textContent = m[3]; el.href = m[4]; el.rel = "noopener"; }
+    parent.append(el);
+    last = m.index + m[0].length;
+  }
+  parent.append(text.slice(last));
+}
+
+/**
+ * 릴리스 본문(마크다운)을 제목 · 목록 · 문단으로만 옮깁니다. HTML 로 해석하지 않습니다.
+ * 릴리스마다 똑같이 붙는 "설치 방법" 부분은 건너뜁니다(홈페이지에 따로 있음).
+ * @returns {boolean} 보여 줄 내용이 있었는지
+ */
+function renderNotes(container, markdown) {
+  let list = null;
+  let skipping = false;
+  let any = false;
+  for (const raw of markdown.replace(/<!--[\s\S]*?-->/g, "").split(/\r?\n/)) {
+    const line = raw.trim();
+    const heading = line.match(/^#{1,6}\s+(.*)$/);
+    if (heading) {
+      skipping = /^(설치\s*방법|install)/i.test(heading[1]);
+      list = null;
+      if (skipping) continue;
+      const h = document.createElement("h4");
+      appendInline(h, heading[1]);
+      container.append(h);
+      any = true;
+      continue;
+    }
+    if (skipping || !line) { if (!line) list = null; continue; }
+    const item = line.match(/^[-*]\s+(.*)$/);
+    if (item) {
+      if (!list) { list = document.createElement("ul"); container.append(list); }
+      const li = document.createElement("li");
+      appendInline(li, item[1]);
+      list.append(li);
+    } else if (list && /^\s{2,}/.test(raw) && list.lastElementChild) {
+      // 목록 항목의 이어지는 줄
+      list.lastElementChild.append(" ");
+      appendInline(list.lastElementChild, line);
+    } else {
+      list = null;
+      const p = document.createElement("p");
+      appendInline(p, line);
+      container.append(p);
+    }
+    any = true;
+  }
+  return any;
+}
+
+function releaseItem(r, isLatest) {
+  const li = document.createElement("li");
+  const head = document.createElement("div");
+  head.className = "rel-head";
+  const ver = document.createElement("span");
+  ver.className = "rel-ver";
+  ver.textContent = r.version;
+  const time = document.createElement("time");
+  time.textContent = formatDate(r.date);
+  if (r.date) time.dateTime = r.date;
+  head.append(ver, time);
+  if (isLatest) {
+    const badge = document.createElement("span");
+    badge.className = "rel-latest";
+    badge.textContent = t("hi.latest");
+    head.append(badge);
+  }
+  const notes = document.createElement("div");
+  notes.className = "rel-notes";
+  if (!renderNotes(notes, r.notes)) {
+    const none = document.createElement("p");
+    none.className = "muted";
+    none.textContent = t("hi.noNotes");
+    notes.append(none);
+  }
+  li.append(head, notes);
+  const files = document.createElement("p");
+  files.className = "rel-files";
+  for (const kind of ["win", "offline", "msi", "mac"]) {
+    const asset = r.assets[kind];
+    if (!asset) continue;
+    const a = document.createElement("a");
+    a.href = asset.url;
+    a.textContent = t(`hi.f.${kind}`);
+    files.append(a);
+  }
+  if (files.childElementCount) li.append(files);
+  return li;
+}
+
+function renderHistory() {
+  const status = document.getElementById("history-status");
+  const first = document.getElementById("history-list");
+  const older = document.getElementById("history-older");
+  const olderList = document.getElementById("history-older-list");
+  first.replaceChildren(...releases.slice(0, HISTORY_SHOWN).map((r, i) => releaseItem(r, i === 0)));
+  olderList.replaceChildren(...releases.slice(HISTORY_SHOWN).map((r) => releaseItem(r, false)));
+  older.hidden = releases.length <= HISTORY_SHOWN;
+  status.hidden = releases.length > 0;
+  if (releaseFailed) {
+    status.textContent = `${t("hi.failed")} `;
+    const a = document.createElement("a");
+    a.href = RELEASES_URL;
+    a.textContent = "GitHub";
+    status.append(a);
+  } else if (!releases.length && release === null && status.dataset.loaded) {
+    status.textContent = t("hi.empty");
+  }
 }
 
 function renderRelease() {
@@ -163,8 +315,7 @@ function renderRelease() {
   }
 
   if (release) {
-    const date = release.date ? new Date(release.date).toLocaleDateString(lang === "en" ? "en-US" : "ko-KR", { year: "numeric", month: "long", day: "numeric" }) : "";
-    const text = t("dl.version").replace("{v}", release.version).replace("{d}", date);
+    const text = t("dl.version").replace("{v}", release.version).replace("{d}", formatDate(release.date));
     versionLine.textContent = text;
     heroLine.textContent = text;
     heroLine.hidden = false;
@@ -176,6 +327,7 @@ function renderRelease() {
   const mine = os && release?.assets[os];
   main.href = mine ? mine.url : "#download";
   mainMeta.textContent = os ? t(`dl.for.${os}`) : "";
+  renderHistory();
 }
 
 /** 벌집 디스크 지도: 가운데 1칸 + 둘레 6칸 + 바깥 12칸 = 19칸 */
@@ -206,7 +358,6 @@ function drawHive() {
 }
 
 for (const b of document.querySelectorAll(".lang button")) b.addEventListener("click", () => setLang(b.dataset.lang));
-document.getElementById("all-releases").href = RELEASES_URL;
 document.getElementById("issues").href = `https://github.com/${REPO}/issues`;
 drawHive();
 setLang(initialLang());

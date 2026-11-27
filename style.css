@@ -123,7 +123,7 @@ h1 {
 
 /* ── 기능 ── */
 section { scroll-margin-top: 24px; }
-.features, .download, .install { max-width: var(--page); margin: 0 auto; padding: clamp(40px, 6vw, 80px) var(--gap); }
+.features, .download, .install, .history { max-width: var(--page); margin: 0 auto; padding: clamp(40px, 6vw, 80px) var(--gap); }
 h2 { margin: 0 0 clamp(24px, 4vw, 44px); font-size: clamp(26px, 3.2vw, 36px); letter-spacing: -0.025em; line-height: 1.2; }
 h3 { margin: 0 0 8px; font-size: 20px; letter-spacing: -0.015em; }
 .no { display: block; font: 500 13px var(--mono); color: var(--honey-ink); margin-bottom: 10px; }
@@ -202,6 +202,27 @@ kbd { padding: 3px 8px; border: 1px solid var(--border); border-bottom-width: 2p
   clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
 }
 .steps b { color: var(--text); }
+
+/* ── 업데이트 이력 ── */
+.rels { list-style: none; margin: 0; padding: 0; }
+.rels > li { position: relative; padding: 0 0 34px 40px; border-left: 2px solid var(--border); margin-left: 9px; }
+.rels > li::before {
+  content: ""; position: absolute; left: -10px; top: 4px; width: 18px; height: 20px; background: var(--cell-empty);
+  clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+}
+#history-list > li:first-child::before { background: var(--honey); }
+.rel-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 14px; }
+.rel-ver { font: 500 22px/1.2 var(--mono); letter-spacing: -0.03em; }
+.rel-head time { font-size: 14px; color: var(--muted); }
+.rel-latest { font-size: 12px; font-weight: 600; color: var(--on-honey); background: var(--honey); padding: 1px 9px; border-radius: 999px; }
+.rel-notes { margin-top: 8px; max-width: 46em; color: var(--text-2); font-size: 15px; }
+.rel-notes h4 { margin: 14px 0 4px; font-size: 15px; color: var(--text); }
+.rel-notes p { margin: 6px 0; }
+.rel-notes ul { margin: 6px 0; padding-left: 1.2em; list-style: disc; }
+.rel-notes li { margin: 3px 0; }
+.rel-files { margin: 12px 0 0; display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 14px; }
+.older summary { cursor: pointer; margin: 0 0 24px 9px; font-size: 14.5px; color: var(--honey-ink); }
+#history-status { margin: 0; }
 
 .foot { max-width: var(--page); margin: 0 auto; padding: 28px var(--gap) 48px; display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font-size: 14px; color: var(--muted); border-top: 1px solid var(--border); }
 
