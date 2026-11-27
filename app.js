@@ -139,7 +139,8 @@ function detectOs() {
 function kindOf(name) {
   const n = name.toLowerCase();
   if (n.endsWith(".dmg")) return "mac";
-  if (n.endsWith(".msi")) return "msi";
+  // 오프라인판은 -setup.exe 만 있습니다. 이름에 offline 이 붙은 .msi 는 잘못 올라간 복사본이라 건너뜁니다
+  if (n.endsWith(".msi")) return n.includes("offline") ? null : "msi";
   if (n.endsWith("offline-setup.exe")) return "offline";
   if (n.endsWith("-setup.exe")) return "win";
   return null;
